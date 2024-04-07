@@ -5,16 +5,16 @@ import org.litepal.crud.LitePalSupport;
 public class County extends LitePalSupport {
     private int id;
     private  String countyName;
-    private int countyCode;
+    private int cityId;
     private String weatherId;
 
 
-    public void setCountyCode(int countyCode) {
-        this.countyCode = countyCode;
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 
-    public int getCountyCode(){
-        return countyCode;
+    public int getCityId(){
+        return cityId;
     }
 
     public void setId(int id){
