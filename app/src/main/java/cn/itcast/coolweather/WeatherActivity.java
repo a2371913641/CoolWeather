@@ -5,6 +5,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import cn.itcast.coolweather.gson.Bing;
 import cn.itcast.coolweather.gson.Forecast;
 import cn.itcast.coolweather.gson.Suggestion;
 import cn.itcast.coolweather.gson.Weather;
+import cn.itcast.coolweather.service.AutoUpdateService;
 import cn.itcast.coolweather.util.HttpUtil;
 import cn.itcast.coolweather.util.Utility;
 import okhttp3.Call;
@@ -62,7 +64,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView sportText;
 
-    private String Key="326d842ee2cd4f7eb58b5885e828caf5";
+    private String Key="&key=326d842ee2cd4f7eb58b5885e828caf5";
 
     private ImageView bingPicImg;
 
@@ -163,7 +165,6 @@ public class WeatherActivity extends AppCompatActivity {
                 try {
                     String url="https://cn.bing.com";
                     document= Jsoup.connect(url).get();
-                    Log.e("MainActivity","document="+document);
                     if(document!=null){
                         getBingImg(document);
                     }
@@ -186,7 +187,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     //根据天气id请求城市天气信息
     public void requestWeather(String weatherId) {
-        String weatherUrl="http://guolin.tech/api/weather?cityid="+weatherId+"&key="+Key;
+        String weatherUrl="http://guolin.tech/api/weather?cityid="+weatherId+Key;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -259,6 +260,8 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        Intent intent=new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     public void getBingImg(Document document) {
