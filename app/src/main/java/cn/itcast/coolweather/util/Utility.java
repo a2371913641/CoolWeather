@@ -2,6 +2,8 @@ package cn.itcast.coolweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,8 @@ import org.json.JSONObject;
 import cn.itcast.coolweather.db.City;
 import cn.itcast.coolweather.db.County;
 import cn.itcast.coolweather.db.Province;
+import cn.itcast.coolweather.gson.Bing;
+import cn.itcast.coolweather.gson.Weather;
 
 public class Utility {
     //解析和处理服务器返回的省级数据
@@ -71,6 +75,30 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    //将返回的JOSN数据解析成Weather实体类
+    public static Weather handleWeatherResponse(String response){
+        try{
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            String weartherContent=jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weartherContent,Weather.class);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void handleBingResponse(String input, Bing bing){
+
+        String strStart="<div class=\"hp_top_cover\" style=\"background-image: url(&quot;";
+        String strEnd=";); opacity: ; display: block;\">";
+        int strStartIndex=input.indexOf(strStart);
+        int strEndIndex=input.indexOf(strEnd);
+        String src=input.substring(strStartIndex,strEndIndex).replace(strStart,"");
+        bing.setImg(src);
     }
 
 }
